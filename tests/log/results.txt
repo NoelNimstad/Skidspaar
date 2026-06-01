@@ -1,4 +1,0 @@
-Randomness seeded to: 797680712
-===============================================================================
-All tests passed (17 assertions in 1 test case)
-
