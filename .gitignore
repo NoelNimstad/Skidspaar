@@ -7,3 +7,7 @@ package/
 resources/
 .vscode/
 example/
+release/
+tests/log/
+tests/catch2/
+tests/bin/
