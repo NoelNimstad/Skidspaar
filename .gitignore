@@ -4,10 +4,13 @@
 # Directories
 debug/
 package/
-resources/
+resources/*
 .vscode/
 example/
 release/
 tests/log/
 tests/catch2/
 tests/bin/
+
+# Exceptions
+!resources/Spår_logo.png
