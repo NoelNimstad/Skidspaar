@@ -1,6 +1,4 @@
-<center>
-	<img src="resources/Spår_logo.png" style="background: white; padding: 10px; image-rendering: pixelated;" width=200/>
-</center>
+<img src="resources/Spår_logo.png" width=200/>
 
 # Skidspår (Spår)
 
