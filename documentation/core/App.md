@@ -1,5 +1,5 @@
 ### *namespace Core*
-# class App
+# [[abstract]] class App
 
 From *[spaar.h](../../source/spaar.hpp)*
 ```cpp

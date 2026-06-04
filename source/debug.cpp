@@ -1,17 +1,29 @@
 #include "debug.hpp"
 
+/*
+	Example
+
+	tabAmmount = 4
+	TAB_SIZE = 4
+*/
+//	[hello world]
+//					***
+/*
+	13 / 4 = 3
+*/
+
 namespace Spår::Debug
 {
 void printMessage(const std::string &from, const std::string &message)
 {
-	size_t length = from.length();
-	size_t tabs = tabAmount - ((length + 2 + TAB_SIZE - 1) / TAB_SIZE);
-	
-	if(tabs > tabAmount)
+	size_t length = from.length() + 2;
+	if(from.length() + 2 >= tabAmount * TAB_SIZE)
 	{
-		std::cout << "[Debug::printMessage] Please increase tabAmount!\n";
+		std::cerr << "{Debug::printMessage} Please increase tabAmount!\n";
 		return;
 	}
+
+	size_t tabs = tabAmount - length / TAB_SIZE;
 
 	std::cout << "[" << from << "]";
 	for(size_t i = 0; i < tabs; i++)
@@ -23,12 +35,13 @@ void printMessage(const std::string &from, const std::string &message)
 
 void printMessage(const std::string &message)
 {
-	size_t tabs = tabAmount - ((3 + TAB_SIZE - 1) / TAB_SIZE);
-	if(tabs > tabAmount)
+	if(3 >= tabAmount * TAB_SIZE)
 	{
-		std::cout << "[Debug::printMessage] Please increase tabAmount!\n";
+		std::cerr << "{Debug::printMessage} Please increase tabAmount!\n";
 		return;
 	}
+
+	constexpr size_t tabs = 16;
 
 	std::cout << "[*]";
 	for(size_t i = 0; i < tabs; i++)
@@ -38,22 +51,26 @@ void printMessage(const std::string &message)
 	std::cout << message << "\n";
 }
 
+/*
+	Yes, I know it is supposed to be `std::cerr` or something
+	but unfortunately that doesn't log in my debugging system
+*/
 void printError(const std::string &from, const std::string &message)
 {
-	size_t length = from.length();
-	size_t tabs = tabAmount - ((length + 2 + TAB_SIZE - 1) / TAB_SIZE);
-	
-	if(tabs > tabAmount)
+	size_t length = from.length() + 2;
+	if(from.length() + 2 >= tabAmount * TAB_SIZE)
 	{
-		std::cerr << "{Debug::printError} Please increase tabAmount!\n";
+		std::cout << "{Debug::printError} Please increase tabAmount!\n";
 		return;
 	}
 
-	std::cerr << "{" << from << "}";
+	size_t tabs = tabAmount - length / TAB_SIZE;
+
+	std::cout << "{" << from << "}";
 	for(size_t i = 0; i < tabs; i++)
 	{
-		std::cerr << "\t";
+		std::cout << "\t";
 	}
-	std::cerr << message << "\n";
+	std::cout << message << "\n";
 }
 }

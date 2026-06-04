@@ -21,6 +21,39 @@ TEST_CASE("Vectors")
 		CHECK(3 * Vector2::i() - 2 * Vector2::j() == Vector2(3, -2));
 	};
 
+	SECTION("Magnitude caching")
+	{
+		Vector3 v(0, 0, 0);
+
+		SECTION("Safe operations")
+		{
+			CHECK(v.magnitude() == 0);
+	
+			v.x(1);
+	
+			CHECK(v.magnitude() == 1);
+
+			v.x(0);
+
+			CHECK(v.magnitude() == 0);
+		}
+
+		SECTION("Unsafe operations")
+		{
+			v[0] = 1;
+	
+			CHECK_FALSE(v.magnitude() == 1);
+	
+			v.unsafeAt(0) = 1;
+	
+			CHECK_FALSE(v.magnitude() == 1);
+	
+			v.markMagnitudeDirty();
+	
+			CHECK(v.magnitude() == 1);
+		}
+	};
+
 	SECTION("Vector operations")
 	{
 		// Parallel

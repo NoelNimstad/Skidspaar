@@ -135,7 +135,7 @@ test_dylib:
 		$(foreach include,$(INCLUDE_SEARCH_PATHS),-I$(include))															\
 		$(foreach library_paths,$(LIBRARY_SEARCH_PATHS),-L$(library_paths))												\
 			$(foreach lib,$(LIBRARIES),-l$(lib))																		\
-		-Lrelease -lSkidspaar																							\
+		-Lrelease -lSpaar																							\
 		$(foreach a_paths,$(A_SEARCH_PATHS),-L$(a_paths))																\
 			$(foreach a,$(A),-l$(a))																					\
 		$(foreach framework_paths,$(FRAMEWORK_SEARCH_PATHS),-F$(framework_paths))										\

@@ -27,7 +27,7 @@ std::string readFile(const std::string &path)
 		content.resize(static_cast<size_t>(fileSize));
 		stream.read(&content[0], static_cast<std::streamsize>(fileSize));
 	}
-	
+
 	return content;
 }
 

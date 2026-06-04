@@ -1,5 +1,9 @@
 #pragma once
 
+#ifdef EN
+	#define Spaar Spår
+#endif
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -14,6 +18,8 @@
 
 #include "types.hpp"
 #include "debug.hpp"
+#include "fs.hpp"
+#include "ECS.hpp"
 
 namespace Spår::Core
 {
@@ -57,8 +63,17 @@ public:
 
 	bool keyDown(SDL_Scancode code) const;
 
+	template<typename T, typename ...Args> requires std::is_base_of<ECS::Scene, T>::value
+	void setActiveScene(Args &&...args)
+	{
+		activeScene = std::make_unique<T>(std::forward<Args>(args)...);
+		activeScene->app = this;
+	}
+
 private:
 	Engine engine;
+	std::unique_ptr<ECS::Scene> activeScene;	
+
 	const bool *keyboardState;
 };
 }

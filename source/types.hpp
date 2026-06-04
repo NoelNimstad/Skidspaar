@@ -16,19 +16,14 @@ typedef float					float32_t;
 typedef double					float64_t;
 typedef long double				float128_t;
 
-namespace Detail
-{
-    template<typename T>
-    constexpr bool IsArithmetic = std::is_arithmetic_v<T>;
-}
-
-template<typename T, size_t N>
+template<typename T, size_t N> requires std::is_arithmetic<T>::value
 struct Vector
 {
-	static_assert(Detail::IsArithmetic<T>, "Vector type must be arithmetic.");
 	static_assert(N > 0, "Vector must have more than 0 components.");
 
 public:
+	void markMagnitudeDirty() { magnitudeDirty = true; }
+
 	constexpr static Vector<T, N> i()
 	{
 		std::array<T, N> result{0};
@@ -67,12 +62,14 @@ public:
 	constexpr T &operator[](size_t index)
 	{
 		assert(index < N && "Vector index out of bounds");
+
 		return components[index];
 	}
 
 	constexpr const T &operator[](size_t index) const
 	{
 		assert(index < N && "Vector index out of bounds");
+
 		return components[index];
 	}
 
@@ -80,17 +77,27 @@ public:
 	constexpr T &unsafeAt(size_t index) { return components[index]; }
 	constexpr const T &unsafeAt(size_t index) const { return components[index]; }
 
+	/*
+		void x(), y(), z() and w() are guaranteed to call markMagnitudeDirty()
+
+		If you use the [] operator and store the reference, you have to manually
+		call markMagnitudeDirty at the end of operations (it is marked dirty)
+	*/
 	[[nodiscard]] constexpr T x() const { return components[0]; }
+	inline void x(T value) { components[0] = value; markMagnitudeDirty(); }
 	[[nodiscard]] constexpr T y() const { static_assert(N > 1, "Vector has no y component."); return components[1]; }
+	inline void y(T value) { static_assert(N > 1, "Vector has no y component."); components[1] = value; markMagnitudeDirty(); }
 	[[nodiscard]] constexpr T z() const { static_assert(N > 2, "Vector has no z component."); return components[2]; }
+	inline void z(T value) { static_assert(N > 2, "Vector has no z component."); components[2] = value; markMagnitudeDirty(); }
 	[[nodiscard]] constexpr T w() const { static_assert(N > 3, "Vector has no w component."); return components[3]; }
+	inline void w(T value) { static_assert(N > 3, "Vector has no w component."); components[3] = value; markMagnitudeDirty(); }
 
 	constexpr Vector<T, N> operator+(const Vector<T, N> &other) const
 	{
-		std::array<T, N> result;
+		std::array<T, N> result(components);
 		for(size_t i = 0; i < N; i++)
 		{
-			result[i] = components[i] + other.components[i];
+			result[i] += other.components[i];
 		}
 
 		return Vector<T, N>(result);
@@ -98,10 +105,10 @@ public:
 
 	constexpr Vector<T, N> operator-(const Vector<T, N> &other) const
 	{
-		std::array<T, N> result;
+		std::array<T, N> result(components);
 		for(size_t i = 0; i < N; i++)
 		{
-			result[i] = components[i] - other.components[i];
+			result[i] -= other.components[i];
 		}
 
 		return Vector<T, N>(result);
@@ -174,13 +181,20 @@ public:
 
 	[[nodiscard]] constexpr T magnitude() const
 	{
-		T result = 0;
-		for(size_t i = 0; i < N; i++)
+		if(magnitudeDirty)
 		{
-			result += components[i] * components[i];
+			T result = 0;
+			for(size_t i = 0; i < N; i++)
+			{
+				result += components[i] * components[i];
+			}
+	
+			magnitudeDirty = false;
+			return (magnitudeChache = std::sqrt(result));
+		} else
+		{
+			return magnitudeChache;
 		}
-
-		return std::sqrt(result);
 	}
 
 	[[nodiscard]] constexpr Vector<T, N> normalise() const
@@ -194,6 +208,9 @@ public:
 		{
 			result[i] = components[i] * inverseMagnitude;
 		}
+
+		magnitudeDirty = false;
+		magnitudeChache = static_cast<T>(1);
 
 		return Vector<T, N>(result);
 	}
@@ -280,6 +297,9 @@ public:
 
 private:
 	std::array<T, N> components;
+
+	mutable T magnitudeChache = 0;
+	mutable bool magnitudeDirty = true;
 };
 
 typedef Vector<int32_t, 2> Vector2_i;
@@ -292,10 +312,9 @@ typedef Vector<int32_t, 4> Vector4_i;
 typedef Vector<float32_t, 4> Vector4;
 typedef Vector<float64_t, 4> Vector4_d;
 
-template<typename T, size_t sides>
+template<typename T, size_t sides> requires std::is_arithmetic<T>::value
 constexpr std::vector<Vector<T, 2> > generatePolygon()
 {
-	static_assert(Detail::IsArithmetic<T>, "Polygon generation requires arithmetic type.");
 	static_assert(sides >= 3, "Polygon must have at least 3 sides.");
 
 	std::vector<Vector<T, 2> > result;

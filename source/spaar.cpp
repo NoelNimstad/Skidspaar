@@ -118,11 +118,15 @@ void App::launch()
 void App::start()
 {
 	Debug::printMessage("Core::App::start", "Default start function executed.");
+
+	activeScene->propagateStart();
 }
 
 void App::run()
 {
 	engine.pollEvents();
+
+	activeScene->propagateUpdate();
 }
 
 bool App::keyDown(SDL_Scancode code) const
