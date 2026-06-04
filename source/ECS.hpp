@@ -30,7 +30,7 @@ public:
 	virtual void start() {};
 	virtual void update() {};
 
-	Entity *getEntity() { return entity; }
+	inline constexpr Entity *getEntity() { return entity; }
 
 private:
 	Entity *entity = nullptr;
@@ -56,7 +56,7 @@ public:
 		return c;
 	}
 
-	Scene *getScene() { return scene; }
+	inline constexpr Scene *getScene() { return scene; }
 
 private:
 	std::vector<std::shared_ptr<Component> > components;
@@ -87,7 +87,7 @@ public:
 	virtual void start() {};
 	virtual void update() {};
 
-	Core::App *getApp() { return app; }
+	inline constexpr Core::App *getApp() { return app; }
 
 private:
 	std::vector<std::shared_ptr<Entity> > entities;
