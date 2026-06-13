@@ -11,5 +11,5 @@ constexpr size_t tabAmount = 16;
 
 void printMessage(const std::string &from, const std::string &message);
 void printMessage(const std::string &message);
-void printError(const std::string &from, const std::string &message);
+std::runtime_error printError(const std::string &from, const std::string &message);
 }

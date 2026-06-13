@@ -190,10 +190,10 @@ public:
 			}
 	
 			magnitudeDirty = false;
-			return (magnitudeChache = std::sqrt(result));
+			return (magnitudeCache = std::sqrt(result));
 		} else
 		{
-			return magnitudeChache;
+			return magnitudeCache;
 		}
 	}
 
@@ -210,7 +210,7 @@ public:
 		}
 
 		magnitudeDirty = false;
-		magnitudeChache = static_cast<T>(1);
+		magnitudeCache = static_cast<T>(1);
 
 		return Vector<T, N>(result);
 	}
@@ -298,7 +298,7 @@ public:
 private:
 	std::array<T, N> components;
 
-	mutable T magnitudeChache = 0;
+	mutable T magnitudeCache = 0;
 	mutable bool magnitudeDirty = true;
 };
 

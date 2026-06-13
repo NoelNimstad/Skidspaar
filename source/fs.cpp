@@ -8,12 +8,12 @@
 
 namespace Spår::Utility
 {
-std::string readFile(const std::string &path)
+std::string readFile(const std::string &path, size_t maxSize)
 {
 	std::ifstream stream(path, std::ios::binary);
 	if(!stream)
 	{
-		Debug::printError("Utility::readFile", "Failed to open file: " + path);
+		throw Debug::printError("Utility::readFile", "Failed to open file: " + path);
 		return {};
 	}
 
@@ -21,11 +21,23 @@ std::string readFile(const std::string &path)
 	std::streampos fileSize = stream.tellg();
 	stream.seekg(0, std::ios::beg);
 
+	if(fileSize > static_cast<std::streampos>(maxSize))
+	{
+		throw Debug::printError("Utility::readFile", "File exceeds maximum size: " + path);
+		return {};
+	}
+
 	std::string content;
 	if(fileSize > 0)
 	{
 		content.resize(static_cast<size_t>(fileSize));
 		stream.read(&content[0], static_cast<std::streamsize>(fileSize));
+		
+		if(stream.fail())
+		{
+			throw Debug::printError("Utility::readFile", "Failed to read file: " + path);
+			return {};
+		}
 	}
 
 	return content;
@@ -36,7 +48,7 @@ void readFileStream(const std::string &path, std::ostream &output)
 	std::ifstream stream(path, std::ios::binary);
 	if(!stream)
 	{
-		Debug::printError("Utility::readFileStream", "Failed to open file: " + path);
+		throw Debug::printError("Utility::readFileStream", "Failed to open file: " + path);
 		return;
 	}
 

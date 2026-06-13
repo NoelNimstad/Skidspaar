@@ -19,7 +19,7 @@ void printMessage(const std::string &from, const std::string &message)
 	size_t length = from.length() + 2;
 	if(from.length() + 2 >= tabAmount * TAB_SIZE)
 	{
-		std::cerr << "{Debug::printMessage} Please increase tabAmount!\n";
+		std::cout << "{Debug::printMessage} Please increase tabAmount!\n";
 		return;
 	}
 
@@ -35,9 +35,9 @@ void printMessage(const std::string &from, const std::string &message)
 
 void printMessage(const std::string &message)
 {
-	if(3 >= tabAmount * TAB_SIZE)
+	if(3 >= tabAmount * TAB_SIZE) [[unlikely]]
 	{
-		std::cerr << "{Debug::printMessage} Please increase tabAmount!\n";
+		std::cout << "{Debug::printMessage} Please increase tabAmount!\n";
 		return;
 	}
 
@@ -55,13 +55,13 @@ void printMessage(const std::string &message)
 	Yes, I know it is supposed to be `std::cerr` or something
 	but unfortunately that doesn't log in my debugging system
 */
-void printError(const std::string &from, const std::string &message)
+std::runtime_error printError(const std::string &from, const std::string &message)
 {
 	size_t length = from.length() + 2;
 	if(from.length() + 2 >= tabAmount * TAB_SIZE)
 	{
 		std::cout << "{Debug::printError} Please increase tabAmount!\n";
-		return;
+		return std::runtime_error("Please increase tabAmount!");
 	}
 
 	size_t tabs = tabAmount - length / TAB_SIZE;
@@ -72,5 +72,7 @@ void printError(const std::string &from, const std::string &message)
 		std::cout << "\t";
 	}
 	std::cout << message << "\n";
+	
+	return std::runtime_error(message);
 }
 }

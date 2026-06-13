@@ -25,7 +25,7 @@ bool checkVulkanValidationLayerSupport(const std::vector<const char *> &validati
 
 		if(!found)
 		{
-			Debug::printError("Graphics::checkValidationLayerSupport", 
+			throw Debug::printError("Graphics::checkValidationLayerSupport", 
 							std::string(layer) + " is not an available validation layer.");
 			return false;
 		}
@@ -56,10 +56,16 @@ VkResult initialiseVulkan(VkInstance *instance, Core::SpårConfiguration configu
 	createInformation.ppEnabledExtensionNames
 		= SDL_Vulkan_GetInstanceExtensions(&createInformation.enabledExtensionCount);
 
+	if(nullptr == createInformation.ppEnabledExtensionNames)
+	{
+		throw Debug::printError("Graphics::initialiseVulkan", "Failed to get Vulkan instance extensions! " + std::string(SDL_GetError()));
+		return VK_NOT_READY;
+	}
+
 	#ifdef DEBUG
 		if(!checkVulkanValidationLayerSupport(configuration.validationLayers))
 		{
-			Debug::printError("Graphics::initialiseVulkan", 
+			throw Debug::printError("Graphics::initialiseVulkan", 
 							"Not all requested Vulkan validation layers are available.");
 			return VK_NOT_READY;
 		}
@@ -72,12 +78,12 @@ VkResult initialiseVulkan(VkInstance *instance, Core::SpårConfiguration configu
 
 	if(vkCreateInstance(&createInformation, nullptr, instance) != VK_SUCCESS)
 	{
-		Debug::printError("Graphics::initialiseVulkan", "Failed to create Vulkan instance.");
+		throw Debug::printError("Graphics::initialiseVulkan", "Failed to create Vulkan instance.");
 		return VK_NOT_READY;
 	}
 
 	#ifdef DEBUG
-		Debug::printMessage("Graphics::initialiseVulkan", "Created Vulkan instance.");
+		throw Debug::printMessage("Graphics::initialiseVulkan", "Created Vulkan instance.");
 	#endif
 
 	return VK_SUCCESS;

@@ -1,6 +1,11 @@
 # Skidspår documentation
+This is the current documentation for Skidspår v0.0.0.
 
 ## Table of contents
+### Articles
+- [Skidspår system architecture](articles/architecture.md)
+
+### Classes
 - *namespace Core*
 	- [[[abstract]] class App](core/App.md)
 	- [struct SpårConfiguration](core/SpårConfiguration.md)

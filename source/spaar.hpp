@@ -16,6 +16,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_vulkan.h>
 
+#include "defaults.hpp"
 #include "types.hpp"
 #include "debug.hpp"
 #include "fs.hpp"
@@ -55,7 +56,7 @@ class App
 {
 public:
 	explicit App(SpårConfiguration configuration);
-	virtual ~App();
+	virtual ~App() = default;
 
 	void launch();
 	virtual void start();

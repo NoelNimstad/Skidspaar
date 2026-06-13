@@ -73,6 +73,7 @@ bundle:
 	cp -rf $(foreach lib,$(LIBRARIES),/Library/Binaries/lib$(lib).dylib) $(PACKAGE_DIRECTORY)/$(NAME)-$(VERSION).app/Contents/Frameworks/
 	open $(PACKAGE_DIRECTORY)
 	cp resources/image/Spår_icon.icns $(PACKAGE_DIRECTORY)/$(NAME)-$(VERSION).app/Contents/Resources/AppIcon.icns
+	codesign --force --deep --sign - $(PACKAGE_DIRECTORY)/$(NAME)-$(VERSION).app 
 dmg:
 	rm -f $(PACKAGE_DIRECTORY)/$(NAME).dmg
 	create-dmg --volname "Skidspår Test" --volicon "resources/image/Spår_icon.icns" $(PACKAGE_DIRECTORY)/$(NAME).dmg "$(PACKAGE_DIRECTORY)"/

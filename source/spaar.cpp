@@ -23,9 +23,7 @@ Engine::EngineImplementation::EngineImplementation(SpårConfiguration config)
 {
 	if(!SDL_Init(SDL_INIT_VIDEO))
 	{
-		Debug::printError("Core::Engine::EngineImplementation::EngineImplementation", "SDL_Init error: " + std::string(SDL_GetError()));
-
-		throw std::runtime_error("SDL initialisation failed");
+		throw Debug::printError("Core::Engine::EngineImplementation::EngineImplementation", "SDL_Init error: " + std::string(SDL_GetError()));
 	}
 
 	window = SDL_CreateWindow(configuration.title,
@@ -33,10 +31,8 @@ Engine::EngineImplementation::EngineImplementation(SpårConfiguration config)
 							SDL_WINDOW_VULKAN);
 	if(!window)
 	{
-		Debug::printError("Core::Engine::EngineImplementation::EngineImplementation", "SDL_CreateWindow error: " + std::string(SDL_GetError()));
 		SDL_Quit();
-
-		throw std::runtime_error("Window creation failed");
+		throw Debug::printError("Core::Engine::EngineImplementation::EngineImplementation", "SDL_CreateWindow error: " + std::string(SDL_GetError()));
 	}
 
 	if(Graphics::initialiseVulkan(&instance, configuration) != VK_SUCCESS)
@@ -44,7 +40,7 @@ Engine::EngineImplementation::EngineImplementation(SpårConfiguration config)
 		SDL_DestroyWindow(window);
 		SDL_Quit();
 
-		throw std::runtime_error("Vulkan initialisation failed");
+		throw Debug::printError("Core::Engine::EngineImplementation::EngineImplementation", "Vulkan initialisation failed");
 	}
 }
 
@@ -96,18 +92,14 @@ App::App(SpårConfiguration configuration)
 {
 }
 
-App::~App()
-{
-}
-
 void App::launch()
 {
 	#ifdef DEBUG
 		Debug::printMessage("Core::App::launch", "Starting application.");
 	#endif
 
-	start();
 	keyboardState = SDL_GetKeyboardState(nullptr);
+	start();
 
 	while(engine.running)
 	{
